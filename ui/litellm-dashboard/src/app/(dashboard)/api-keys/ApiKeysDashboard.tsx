@@ -1,6 +1,6 @@
 "use client";
 
-import { teamListCall as v2TeamListCall } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { KeyResponse, Team } from "@/components/key_team_helpers/key_list";
 import { CreateKeyPrefillData } from "@/components/organisms/create_key_button";
@@ -19,6 +19,7 @@ export default function ApiKeysDashboard() {
   const [teams, setTeams] = useState<Team[] | null>(null);
   const [keys, setKeys] = useState<KeyResponse[] | null>([]);
   const [createClicked, setCreateClicked] = useState<boolean>(false);
+  const { data: allTeams } = useAllTeams();
 
   const autoOpenCreate = searchParams.get("create") === "true";
   const prefillData: CreateKeyPrefillData | undefined = useMemo(() => {
@@ -67,14 +68,8 @@ export default function ApiKeysDashboard() {
   };
 
   useEffect(() => {
-    if (accessToken && userID && userRole) {
-      v2TeamListCall(accessToken, 1, 100, {
-        userID: userRole !== "Admin" && userRole !== "Admin Viewer" ? userID : null,
-      })
-        .then((response) => setTeams(response.teams ?? []))
-        .catch(console.error);
-    }
-  }, [accessToken, userID, userRole]);
+    setTeams(allTeams ?? null);
+  }, [allTeams]);
 
   return (
     <UserDashboard
@@ -86,7 +81,6 @@ export default function ApiKeysDashboard() {
       setUserRole={setUserRole}
       userEmail={userEmail}
       setUserEmail={setUserEmail}
-      setTeams={setTeams}
       setKeys={setKeys}
       addKey={addKey}
       createClicked={createClicked}

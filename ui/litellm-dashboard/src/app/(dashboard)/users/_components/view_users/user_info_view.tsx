@@ -27,11 +27,11 @@ import {
   invitationCreateCall,
   getProxyBaseUrl,
   teamInfoCall,
-  teamListCall,
   teamMemberAddCall,
   teamMemberDeleteCall,
   Member,
 } from "@/components/networking";
+import { teamListCall as v2TeamListCall } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { Button as AntdButton, Modal, Select as AntdSelect, Form, Tooltip } from "antd";
 import { rolesWithWriteAccess } from "@/utils/roles";
 import { UserEditView } from "../user_edit_view";
@@ -219,9 +219,17 @@ export default function UserInfoView({
     if (!accessToken) return;
     setIsLoadingTeams(true);
     try {
-      const teams = await teamListCall(accessToken, null);
+      const firstPage = await v2TeamListCall(accessToken, 1, 100);
+      const totalPages = firstPage.total_pages ?? 1;
+      let teamsArray = firstPage.teams ?? [];
+      if (totalPages > 1) {
+        const remainingPages = await Promise.all(
+          Array.from({ length: totalPages - 1 }, (_, i) => v2TeamListCall(accessToken, i + 2, 100)),
+        );
+        teamsArray = [firstPage, ...remainingPages].flatMap((page) => page.teams ?? []);
+      }
       setAllTeams(
-        (teams || []).map((t: any) => ({
+        teamsArray.map((t: any) => ({
           team_id: t.team_id,
           team_alias: t.team_alias || t.team_id,
         })),

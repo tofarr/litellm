@@ -5,6 +5,7 @@ import { fetchTeams } from "@/app/(dashboard)/networking";
 import { createQueryKeys } from "@/app/(dashboard)/hooks/common/queryKeysFactory";
 import { teamInfoCall } from "@/components/networking";
 import { getProxyBaseUrl, getGlobalLitellmHeaderName, deriveErrorMessage, handleError } from "@/components/networking";
+import { isAdminRole } from "@/utils/roles";
 
 export interface TeamsResponse {
   teams: Team[];
@@ -135,6 +136,45 @@ export const useAllTeams = (): UseQueryResult<Team[]> => {
     }),
     queryFn: async () => await fetchAllTeamsPaged(accessToken!),
     enabled: Boolean(accessToken),
+    staleTime: 30000,
+  });
+};
+
+const MY_TEAMS_PAGE_SIZE = 100;
+
+const fetchMyTeamsPaged = async (accessToken: string, userId: string): Promise<Team[]> => {
+  const firstPage: TeamsResponse = await teamListCall(accessToken, 1, MY_TEAMS_PAGE_SIZE, {
+    userID: userId,
+  });
+  const totalPages = firstPage.total_pages ?? 1;
+  if (totalPages <= 1) return firstPage.teams;
+
+  const remainingPages: TeamsResponse[] = await Promise.all(
+    Array.from({ length: totalPages - 1 }, (_, i) =>
+      teamListCall(accessToken, i + 2, MY_TEAMS_PAGE_SIZE, { userID: userId }),
+    ),
+  );
+  return [firstPage, ...remainingPages].flatMap((page) => page.teams);
+};
+
+const myTeamKeys = createQueryKeys("myTeams");
+
+/**
+ * Bounded team list for permission checks (canModifyModel, isUserTeamAdminForAnyTeam,
+ * modelCreationScope). Fetches only teams the caller is a member of via the paginated
+ * v2 endpoint with user_id filtering, so the result set is small for non-admins.
+ * Disabled for admin roles since every permission helper short-circuits on admin.
+ */
+export const useMyTeams = (): UseQueryResult<Team[]> => {
+  const { accessToken, userId, userRole } = useAuthorized();
+  const isAdmin = Boolean(userRole) && isAdminRole(userRole);
+  return useQuery<Team[]>({
+    queryKey: myTeamKeys.list({ filters: { userId: userId ?? "", accessToken: accessToken ?? "" } }),
+    queryFn: async () => {
+      if (!userId) return [];
+      return await fetchMyTeamsPaged(accessToken!, userId);
+    },
+    enabled: Boolean(accessToken && userId) && !isAdmin,
     staleTime: 30000,
   });
 };

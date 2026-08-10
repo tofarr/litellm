@@ -7,7 +7,7 @@ import { ProjectBaseForm, ProjectFormValues } from "./ProjectBaseForm";
 
 const mockUseTeams = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
-  useTeams: () => mockUseTeams(),
+  useAllTeams: () => mockUseTeams(),
 }));
 
 vi.mock("@/components/organisms/create_key_button", () => ({

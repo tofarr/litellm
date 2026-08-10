@@ -6,7 +6,7 @@ import HealthCheckComponent from "@/components/model_dashboard/HealthCheckCompon
 import { getDisplayModelName } from "@/components/view_model/model_name_display";
 import { useModelsInfo } from "@/app/(dashboard)/hooks/models/useModels";
 import { useModelCostMap } from "@/app/(dashboard)/hooks/models/useModelCostMap";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { transformModelData } from "@/app/(dashboard)/models-and-endpoints/utils/modelDataTransformer";
 import { useModelDetailRouting } from "@/app/(dashboard)/models-and-endpoints/detailNavigation";
@@ -15,7 +15,7 @@ const HEALTH_PAGE_SIZE = 50;
 
 export default function HealthStatusPanel() {
   const { accessToken } = useAuthorized();
-  const { data: teams } = useTeams();
+  const { data: teams } = useAllTeams();
   const { data: modelCostMapData } = useModelCostMap();
   const { openModel } = useModelDetailRouting();
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: HEALTH_PAGE_SIZE });

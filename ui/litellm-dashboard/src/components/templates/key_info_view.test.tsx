@@ -1,5 +1,5 @@
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { renderWithProviders } from "../../../tests/test-utils";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -20,8 +20,8 @@ vi.mock("./key_edit_view", () => ({
   },
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({
-  default: vi.fn(),
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
+  useAllTeams: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
@@ -57,10 +57,7 @@ vi.mock("@/utils/dataUtils", () => ({
 
 describe("KeyInfoView", () => {
   beforeEach(() => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
   });
   const MOCK_KEY_DATA: KeyResponse = {
     token: "test-token-123",
@@ -187,10 +184,7 @@ describe("KeyInfoView", () => {
   });
 
   it("should allow proxy admin to modify key", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -233,10 +227,7 @@ describe("KeyInfoView", () => {
       spend: 0,
     };
 
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [mockTeam],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [mockTeam], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -257,10 +248,7 @@ describe("KeyInfoView", () => {
   });
 
   it("should allow owner to modify their own key", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -282,10 +270,7 @@ describe("KeyInfoView", () => {
   });
 
   it("should not allow other user to modify key", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -305,10 +290,7 @@ describe("KeyInfoView", () => {
   });
 
   it("should not allow Internal Viewer to modify key even if they own it", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -350,10 +332,7 @@ describe("KeyInfoView", () => {
       spend: 0,
     };
 
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [mockTeam],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [mockTeam], isLoading: false } as any);
 
     vi.mocked(useAuthorized).mockReturnValue({
       ...baseUseAuthorizedMock,
@@ -458,8 +437,7 @@ describe("KeyInfoView", () => {
     it("should show the Edit Settings button when the user is a team admin for the key's team", async () => {
       const teamId = "test-team-id";
       const teamAdminUserId = "team-admin-user";
-      vi.mocked(useTeams).mockReturnValue({
-        teams: [
+      vi.mocked(useAllTeams).mockReturnValue({ data: [
           {
             team_id: teamId,
             team_alias: "Test Team",
@@ -474,9 +452,7 @@ describe("KeyInfoView", () => {
             members_with_roles: [{ user_id: teamAdminUserId, role: "admin" }],
             spend: 0,
           },
-        ],
-        setTeams: vi.fn(),
-      });
+        ], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: teamAdminUserId,
@@ -561,7 +537,7 @@ describe("KeyInfoView", () => {
 
   describe("Reset Spend button visibility", () => {
     it("should show Reset Spend button for proxy admin", async () => {
-      vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+      vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: "proxy-admin-user",
@@ -600,7 +576,7 @@ describe("KeyInfoView", () => {
         spend: 0,
       };
 
-      vi.mocked(useTeams).mockReturnValue({ teams: [mockTeam], setTeams: vi.fn() });
+      vi.mocked(useAllTeams).mockReturnValue({ data: [mockTeam], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: teamAdminUserId,
@@ -623,7 +599,7 @@ describe("KeyInfoView", () => {
     });
 
     it("should not show Reset Spend button for regular key owner", async () => {
-      vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+      vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: "owner-user-id",
@@ -649,7 +625,7 @@ describe("KeyInfoView", () => {
 
   describe("Reset Spend modal flow", () => {
     it("should open confirmation modal when Reset Spend is clicked", async () => {
-      vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+      vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: "proxy-admin-user",
@@ -676,7 +652,7 @@ describe("KeyInfoView", () => {
     });
 
     it("should call mutate with token on confirm", async () => {
-      vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+      vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
       vi.mocked(useAuthorized).mockReturnValue({
         ...baseUseAuthorizedMock,
         userId: "proxy-admin-user",

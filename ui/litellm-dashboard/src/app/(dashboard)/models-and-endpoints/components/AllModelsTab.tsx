@@ -1,7 +1,7 @@
 "use client";
 
 import { useModelCostMap } from "@/app/(dashboard)/hooks/models/useModelCostMap";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import DeleteResourceModal from "@/components/common_components/DeleteResourceModal";
 import ModelSettingsModal from "@/components/model_dashboard/ModelSettingsModal/ModelSettingsModal";
@@ -48,7 +48,7 @@ const AllModelsTab = ({
 }: AllModelsTabProps) => {
   const { data: modelCostMapData, isLoading: isLoadingModelCostMap } = useModelCostMap();
   const { accessToken, userId, userRole } = useAuthorized();
-  const { data: teams, isLoading: isLoadingTeams } = useTeams();
+  const { data: teams, isLoading: isLoadingTeams } = useAllTeams();
   const queryClient = useQueryClient();
 
   const [modelNameSearch, setModelNameSearch] = useState<string>("");

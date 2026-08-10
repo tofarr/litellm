@@ -18,7 +18,7 @@ import {
 import type { FormInstance } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { Team } from "@/components/key_team_helpers/key_list";
 import { fetchTeamModels } from "@/components/organisms/create_key_button";
 import { getModelDisplayName } from "@/components/key_team_helpers/fetch_available_models_team_key";
@@ -42,7 +42,7 @@ interface ProjectBaseFormProps {
 
 export function ProjectBaseForm({ form }: ProjectBaseFormProps) {
   const { accessToken, userId, userRole } = useAuthorized();
-  const { data: teams } = useTeams();
+  const { data: teams } = useAllTeams();
 
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [modelsToPick, setModelsToPick] = useState<string[]>([]);

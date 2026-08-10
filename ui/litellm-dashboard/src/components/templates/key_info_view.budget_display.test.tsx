@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { KeyResponse, Team } from "../key_team_helpers/key_list";
 import KeyInfoView from "./key_info_view";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 
 // IMPORTANT: do not mock `@/utils/dataUtils` here. We want to exercise the
 // real `formatNumberWithCommas` so this test catches the LIT-2845 regression
@@ -15,7 +15,7 @@ vi.mock("./key_edit_view", () => ({
   KeyEditView: () => <div data-testid="key-edit-view-stub" />,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({ default: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({ useAllTeams: vi.fn() }));
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({ default: vi.fn() }));
 vi.mock("@/app/(dashboard)/hooks/projects/useProjects", () => ({
   useProjects: vi.fn().mockReturnValue({ data: [], isLoading: false }),
@@ -125,7 +125,7 @@ const makeTeam = (overrides: Partial<Team>): Team => ({
 
 describe("KeyInfoView overview budget display (LIT-2845)", () => {
   beforeEach(() => {
-    vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
     vi.mocked(useAuthorized).mockReturnValue(baseAuthorized);
   });
 
@@ -182,10 +182,7 @@ describe("KeyInfoView overview budget display (LIT-2845)", () => {
   });
 
   it("renders team budget with alias and duration when key has no own budget but team has one", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [makeTeam({ team_id: "team-123", team_alias: "Test Budget", max_budget: 1200, budget_duration: "30d" })],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [makeTeam({ team_id: "team-123", team_alias: "Test Budget", max_budget: 1200, budget_duration: "30d" })], isLoading: false } as any);
     renderWithProviders(
       <KeyInfoView
         keyData={{ ...MOCK_KEY_DATA, max_budget: null, team_id: "team-123" } as unknown as KeyResponse}
@@ -201,10 +198,7 @@ describe("KeyInfoView overview budget display (LIT-2845)", () => {
   });
 
   it("renders team budget without duration when team has no budget_duration", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [makeTeam({ team_id: "team-456", team_alias: "No Duration Team", max_budget: 500 })],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [makeTeam({ team_id: "team-456", team_alias: "No Duration Team", max_budget: 500 })], isLoading: false } as any);
     renderWithProviders(
       <KeyInfoView
         keyData={{ ...MOCK_KEY_DATA, max_budget: null, team_id: "team-456" } as unknown as KeyResponse}
@@ -220,10 +214,7 @@ describe("KeyInfoView overview budget display (LIT-2845)", () => {
   });
 
   it("renders 'Unlimited' when key has no budget and team also has no budget", async () => {
-    vi.mocked(useTeams).mockReturnValue({
-      teams: [makeTeam({ team_id: "team-789", team_alias: "Free Team" })],
-      setTeams: vi.fn(),
-    });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [makeTeam({ team_id: "team-789", team_alias: "Free Team" })], isLoading: false } as any);
     renderWithProviders(
       <KeyInfoView
         keyData={{ ...MOCK_KEY_DATA, max_budget: null, team_id: "team-789" } as unknown as KeyResponse}
@@ -241,7 +232,7 @@ describe("KeyInfoView overview budget display (LIT-2845)", () => {
 
 describe("KeyInfoView budget reset visibility", () => {
   beforeEach(() => {
-    vi.mocked(useTeams).mockReturnValue({ teams: [], setTeams: vi.fn() });
+    vi.mocked(useAllTeams).mockReturnValue({ data: [], isLoading: false } as any);
     vi.mocked(useAuthorized).mockReturnValue(baseAuthorized);
   });
 

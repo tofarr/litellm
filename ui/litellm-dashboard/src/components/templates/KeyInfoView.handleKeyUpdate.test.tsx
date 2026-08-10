@@ -237,11 +237,11 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-// Mock useTeams hook
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({
-  default: vi.fn(() => ({
-    teams: [],
-    setTeams: vi.fn(),
+// Mock useAllTeams hook
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
+  useAllTeams: vi.fn(() => ({
+    data: [],
+    isLoading: false,
   })),
 }));
 

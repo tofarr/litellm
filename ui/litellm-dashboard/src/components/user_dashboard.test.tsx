@@ -48,11 +48,6 @@ vi.mock("@/utils/cookieUtils", () => ({
   getCookie: vi.fn().mockReturnValue("fake-jwt-token"),
 }));
 
-// Mock fetchTeams
-vi.mock("./common_components/fetch_teams", () => ({
-  fetchTeams: vi.fn(),
-}));
-
 // Mock heavy child components to isolate UserDashboard behavior
 vi.mock("./organisms/create_key_button", () => ({
   default: () => <div data-testid="create-key-mock" />,
@@ -82,7 +77,6 @@ const defaultProps = {
   keys: [] as any[],
   setUserRole: vi.fn(),
   setUserEmail: vi.fn(),
-  setTeams: vi.fn(),
   setKeys: vi.fn(),
   premiumUser: false,
   addKey: vi.fn(),

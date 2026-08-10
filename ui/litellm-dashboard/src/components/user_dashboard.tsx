@@ -3,10 +3,9 @@ import { clearTokenCookies, getCookie } from "@/utils/cookieUtils";
 import { Col, Grid } from "@tremor/react";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { fetchTeams } from "./common_components/fetch_teams";
 import { KeyResponse, Team } from "./key_team_helpers/key_list";
 import { effectiveSessionRole } from "@/utils/roles";
-import { getProxyBaseUrl, keyInfoCall, modelAvailableCall, Organization, userGetInfoV2 } from "./networking";
+import { getProxyBaseUrl, keyInfoCall, modelAvailableCall, userGetInfoV2 } from "./networking";
 import CreateKey, { CreateKeyPrefillData } from "./organisms/create_key_button";
 import { VirtualKeysTable } from "./VirtualKeysPage/VirtualKeysTable";
 
@@ -34,7 +33,6 @@ interface UserDashboardProps {
   keys: any[] | null;
   setUserRole: React.Dispatch<React.SetStateAction<string>>;
   setUserEmail: React.Dispatch<React.SetStateAction<string | null>>;
-  setTeams: React.Dispatch<React.SetStateAction<Team[] | null>>;
   setKeys: (keys: KeyResponse[]) => void;
   premiumUser: boolean;
   addKey: (data: any) => void;
@@ -51,7 +49,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
   setUserRole,
   userEmail,
   setUserEmail,
-  setTeams,
   setKeys,
   premiumUser,
   addKey,
@@ -60,8 +57,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
   prefillData,
 }) => {
   const [userSpendData, setUserSpendData] = useState<UserInfo | null>(null);
-  const [currentOrg] = useState<Organization | null>(null);
-
   const token = getCookie("token");
 
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -130,7 +125,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
           }
         };
         fetchData();
-        fetchTeams(accessToken, userID, userRole, currentOrg, setTeams);
       }
     }
   }, [userID, token, accessToken, userRole]);
@@ -150,12 +144,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
       fetchKeyInfo();
     }
   }, [accessToken]);
-
-  useEffect(() => {
-    if (accessToken) {
-      fetchTeams(accessToken, userID, userRole, currentOrg, setTeams);
-    }
-  }, [currentOrg]);
 
   function gotoLogin() {
     // Clear token cookies using the utility function

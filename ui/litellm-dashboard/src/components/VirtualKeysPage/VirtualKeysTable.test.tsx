@@ -7,7 +7,6 @@ import { VirtualKeysTable } from "./VirtualKeysTable";
 import { KeyResponse, Team } from "../key_team_helpers/key_list";
 import { useKeyInfo } from "@/app/(dashboard)/hooks/keys/useKeyInfo";
 import { KeysResponse, useKeys } from "@/app/(dashboard)/hooks/keys/useKeys";
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
 
 // Resolve debounced values synchronously so an applied filter lands in the useKeys query within the test tick.
 vi.mock("@tanstack/react-pacer/debouncer", async () => {
@@ -47,10 +46,6 @@ vi.mock("@/app/(dashboard)/hooks/keys/useKeys", () => ({
 
 vi.mock("@/app/(dashboard)/hooks/keys/useKeyInfo", () => ({
   useKeyInfo: vi.fn(),
-}));
-
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({
-  default: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
@@ -144,7 +139,6 @@ const mockTeam: Team = {
 };
 
 const mockUseKeys = useKeys as MockedFunction<typeof useKeys>;
-const mockUseTeams = useTeams as MockedFunction<typeof useTeams>;
 const mockUseKeyInfo = useKeyInfo as MockedFunction<typeof useKeyInfo>;
 
 const keyInfoResult = (data: KeyResponse | undefined, isError = false) =>
@@ -176,11 +170,6 @@ beforeEach(() => {
 
   mockUseKeys.mockReturnValue(keysResult([mockKey]));
   mockUseKeyInfo.mockReturnValue(keyInfoResult(undefined));
-
-  mockUseTeams.mockReturnValue({
-    teams: [mockTeam],
-    setTeams: vi.fn(),
-  });
 });
 
 it("should render VirtualKeysTable component", () => {

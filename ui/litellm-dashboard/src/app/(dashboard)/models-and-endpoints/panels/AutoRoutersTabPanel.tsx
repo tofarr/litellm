@@ -1,6 +1,6 @@
 "use client";
 
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useMyTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { useUISettings } from "@/app/(dashboard)/hooks/uiSettings/useUISettings";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { internalUserRoles } from "@/utils/roles";
@@ -16,7 +16,7 @@ import { AutoRoutersPanel } from "../components/AutoRouters/AutoRoutersPanel";
  */
 export default function AutoRoutersTabPanel() {
   const { accessToken, userRole, userId: userID } = useAuthorized();
-  const { data: teams } = useTeams();
+  const { data: teams } = useMyTeams();
   const { data: uiSettings } = useUISettings();
 
   const isInternalUser = userRole != null && internalUserRoles.includes(userRole);
