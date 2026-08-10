@@ -1,4 +1,4 @@
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { organizationKeys, useOrganization } from "@/app/(dashboard)/hooks/organizations/useOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import { useVisitedTabs } from "@/hooks/useVisitedTabs";
@@ -53,7 +53,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
   const [isEditMemberModalVisible, setIsEditMemberModalVisible] = useState(false);
   const [selectedEditMember, setSelectedEditMember] = useState<Member | null>(null);
   const canEditOrg = is_org_admin || is_proxy_admin;
-  const { data: teams } = useTeams();
+  const { data: teams } = useAllTeams();
   const { onTabChange, hasVisited } = useVisitedTabs(editOrg ? "settings" : "overview");
 
   const teamAliasMap = useMemo(() => createTeamAliasMap(teams), [teams]);

@@ -1,4 +1,5 @@
-import { teamListCall, organizationListCall, keyListCall } from "../networking";
+import { teamListCall as v2TeamListCall } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { organizationListCall, keyListCall } from "../networking";
 import { Team } from "./key_list";
 import { Organization } from "../networking";
 
@@ -120,25 +121,18 @@ export const fetchAllTeams = async (accessToken: string | null, organizationId?:
   if (!accessToken) return [];
 
   try {
-    let allTeams: Team[] = [];
-    let currentPage = 1;
-    let hasMorePages = true;
+    const firstPage = await v2TeamListCall(accessToken, 1, 100, {
+      organizationID: organizationId ?? null,
+    });
+    const totalPages = firstPage.total_pages ?? 1;
+    if (totalPages <= 1) return firstPage.teams;
 
-    while (hasMorePages) {
-      const response = await teamListCall(accessToken, organizationId || null, null);
-
-      // Add teams from this page
-      allTeams = [...allTeams, ...response];
-
-      // Check if there are more pages
-      if (currentPage < response.total_pages) {
-        currentPage++;
-      } else {
-        hasMorePages = false;
-      }
-    }
-
-    return allTeams;
+    const remainingPages = await Promise.all(
+      Array.from({ length: totalPages - 1 }, (_, i) =>
+        v2TeamListCall(accessToken, i + 2, 100, { organizationID: organizationId ?? null }),
+      ),
+    );
+    return [firstPage, ...remainingPages].flatMap((page) => page.teams);
   } catch (error) {
     console.error("Error fetching all teams:", error);
     return [];

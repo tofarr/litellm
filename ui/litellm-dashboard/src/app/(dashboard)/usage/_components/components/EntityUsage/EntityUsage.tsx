@@ -1,4 +1,4 @@
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { BarChart, DonutChart } from "@/components/shared/charts";
 import { MoneyCell } from "@/components/shared/table_cells";
 import { Card as ShadcnCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,7 +109,7 @@ const ENTITY_FETCH_FNS: Record<EntityType, (...args: any[]) => Promise<any>> = {
 };
 
 const EntityUsage: React.FC<EntityUsageProps> = ({ accessToken, entityType, entityId, entityList, dateValue }) => {
-  const { teams } = useTeams();
+  const { data: teams } = useAllTeams();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [modelViewType, setModelViewType] = useState<ModelViewType>("groups");
   const [topKeysLimit, setTopKeysLimit] = useState<number>(5);

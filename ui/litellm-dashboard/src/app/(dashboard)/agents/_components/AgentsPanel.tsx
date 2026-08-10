@@ -7,7 +7,6 @@ import AgentInfoView from "./agent_info";
 import AgentsTable from "./AgentsTable";
 import NotificationsManager from "@/components/molecules/notifications_manager";
 import { Agent } from "@/components/agents/types";
-import { Team } from "@/components/key_team_helpers/key_list";
 import { Alert, AlertDescription, AlertTitle } from "@/components/shared/Alert";
 import {
   AlertDialog,
@@ -23,14 +22,13 @@ import { Button } from "@/components/ui/button";
 interface AgentsPanelProps {
   accessToken: string | null;
   userRole?: string;
-  teams?: Team[] | null;
 }
 
 interface AgentsResponse {
   agents: Agent[];
 }
 
-const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole, teams }) => {
+const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole }) => {
   const [agentsList, setAgentsList] = useState<Agent[]>([]);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -186,7 +184,6 @@ const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole, teams 
         onClose={handleCloseModal}
         accessToken={accessToken}
         onSuccess={handleSuccess}
-        teams={teams}
       />
 
       {agentToDelete && (

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, Form, Select, Radio, Divider, Typography } from "antd";
 import { Button } from "@tremor/react";
 import { Policy } from "@/components/policies/types";
-import { teamListCall, keyListCall, modelAvailableCall, estimateAttachmentImpactCall } from "@/components/networking";
+import { teamListCall as v2TeamListCall } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { keyListCall, modelAvailableCall, estimateAttachmentImpactCall } from "@/components/networking";
 import NotificationsManager from "@/components/molecules/notifications_manager";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { buildAttachmentData } from "./build_attachment_data";
@@ -52,12 +53,19 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
   const loadTeamsKeysAndModels = async () => {
     if (!accessToken) return;
 
-    // Load teams — teamListCall returns a plain array of team objects
+    // Load teams — v2 teamListCall returns { teams: [...], total_pages, ... }
     setIsLoadingTeams(true);
     setTeamsLoaded(false);
     try {
-      const teamsResponse = await teamListCall(accessToken, null, null);
-      const teamsArray = Array.isArray(teamsResponse) ? teamsResponse : teamsResponse?.data || [];
+      const firstPage = await v2TeamListCall(accessToken, 1, 100);
+      const totalPages = firstPage.total_pages ?? 1;
+      let teamsArray = firstPage.teams ?? [];
+      if (totalPages > 1) {
+        const remainingPages = await Promise.all(
+          Array.from({ length: totalPages - 1 }, (_, i) => v2TeamListCall(accessToken, i + 2, 100)),
+        );
+        teamsArray = [firstPage, ...remainingPages].flatMap((page) => page.teams ?? []);
+      }
       const teamAliases = teamsArray.map((t: any) => t.team_alias).filter(Boolean);
       setAvailableTeams(teamAliases);
       setTeamsLoaded(true);

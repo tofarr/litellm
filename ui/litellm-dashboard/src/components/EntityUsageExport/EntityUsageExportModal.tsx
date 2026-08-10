@@ -1,4 +1,4 @@
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { createTeamAliasMap } from "@/utils/teamUtils";
 import { Button, Modal, Skeleton } from "antd";
 import React, { useMemo, useState } from "react";
@@ -21,7 +21,7 @@ const EntityUsageExportModal: React.FC<EntityUsageExportModalProps> = ({
   const [exportFormat, setExportFormat] = useState<ExportFormat>("csv");
   const [exportScope, setExportScope] = useState<ExportScope>("daily");
   const [isExporting, setIsExporting] = useState(false);
-  const { data: teams, isLoading: isLoadingTeams } = useTeams();
+  const { data: teams, isLoading: isLoadingTeams } = useAllTeams();
 
   const entityLabel = entityType.charAt(0).toUpperCase() + entityType.slice(1);
   const modalTitle = customTitle || `Export ${entityLabel} Usage`;

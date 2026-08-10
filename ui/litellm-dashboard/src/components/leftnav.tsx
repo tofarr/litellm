@@ -1,5 +1,5 @@
 import { useOrganizations } from "@/app/(dashboard)/hooks/organizations/useOrganizations";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useMyTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { useHealthReadinessDetails } from "@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails";
 import { useLogout } from "@/app/(dashboard)/hooks/useLogout";
@@ -409,7 +409,7 @@ const Sidebar_: React.FC<SidebarProps> = ({
 }) => {
   const { userId, accessToken, userRole, isViewOnly } = useAuthorized();
   const { data: organizations } = useOrganizations();
-  const { data: teams } = useTeams();
+  const { data: teams } = useMyTeams();
   const { logoUrl } = useTheme();
   const { data: healthData } = useHealthReadinessDetails(accessToken);
   const logout = useLogout(accessToken);

@@ -67,7 +67,7 @@ vi.mock("../../hooks/models/useModelCostMap", () => ({
 
 const mockTeams = [{ team_id: "team-1", team_alias: "Engineering" }];
 vi.mock("../../hooks/teams/useTeams", () => ({
-  useTeams: () => ({ data: mockTeams, isLoading: false, error: null, refetch: vi.fn() }),
+  useAllTeams: () => ({ data: mockTeams, isLoading: false, error: null, refetch: vi.fn() }),
 }));
 
 const BASE_MODEL_INFO = {

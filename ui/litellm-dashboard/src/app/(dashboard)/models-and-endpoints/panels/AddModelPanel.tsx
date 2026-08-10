@@ -9,7 +9,7 @@ import { Providers, getPlaceholder, getProviderModels } from "@/components/provi
 import NotificationsManager from "@/components/molecules/notifications_manager";
 import { useModelCostMap } from "@/app/(dashboard)/hooks/models/useModelCostMap";
 import { useCredentials } from "@/app/(dashboard)/hooks/credentials/useCredentials";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useMyTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { vertexCredentialsUploadProps } from "@/app/(dashboard)/models-and-endpoints/vertexCredentialsUpload";
 
@@ -19,7 +19,7 @@ export default function AddModelPanel() {
   const queryClient = useQueryClient();
   const { data: modelCostMapData } = useModelCostMap();
   const { data: credentialsResponse } = useCredentials();
-  const { data: teams } = useTeams();
+  const { data: teams } = useMyTeams();
   const [selectedProvider, setSelectedProvider] = useState<Providers>(Providers.Anthropic);
   const [providerModels, setProviderModels] = useState<string[]>([]);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);

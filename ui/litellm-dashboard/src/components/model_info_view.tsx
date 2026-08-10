@@ -33,7 +33,7 @@ import {
   isComplexityRouter as isComplexityRouterParams,
 } from "./add_model/auto_router_strategies";
 import { canModifyModel } from "@/utils/modelPermissions";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useMyTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import CacheControlSettings from "./add_model/cache_control_settings";
 import DeleteResourceModal from "./common_components/DeleteResourceModal";
 import EditAutoRouterModal from "./edit_auto_router/edit_auto_router_modal";
@@ -155,7 +155,7 @@ export default function ModelInfoView({
   const { data: rawModelDataResponse, isLoading: isLoadingModel } = useModelsInfo(1, 50, undefined, modelId);
   const { data: modelCostMapData } = useModelCostMap();
   const { data: modelHubData } = useModelHub();
-  const { data: teams } = useTeams();
+  const { data: teams } = useMyTeams();
 
   // Transform the model data
   const getProviderFromModel = (model: string) => {

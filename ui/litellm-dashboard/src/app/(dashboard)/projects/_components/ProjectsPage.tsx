@@ -1,5 +1,5 @@
 import { useProjects } from "@/app/(dashboard)/hooks/projects/useProjects";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Flex, Input, Layout, Space, theme, Typography } from "antd";
 import { SearchIcon } from "lucide-react";
@@ -15,7 +15,7 @@ const { Content } = Layout;
 export function ProjectsPage() {
   const { token } = theme.useToken();
   const { data: projects, isLoading } = useProjects();
-  const { data: teams, isLoading: isTeamsLoading } = useTeams();
+  const { data: teams, isLoading: isTeamsLoading } = useAllTeams();
 
   const [selectedProjectId, setSelectedProjectId] = useQueryState(
     "project",

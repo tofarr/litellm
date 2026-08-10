@@ -12,7 +12,7 @@ vi.mock("@/app/(dashboard)/hooks/projects/useProjects", () => ({
 
 const mockUseTeams = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
-  useTeams: () => mockUseTeams(),
+  useAllTeams: () => mockUseTeams(),
 }));
 
 // Stub modals and the detail page to keep tests focused on the list page

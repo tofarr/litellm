@@ -80,7 +80,7 @@ const mockUseTeamsData = {
 const mockUseTeams = vi.fn(() => mockUseTeamsData);
 
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
-  useTeams: () => mockUseTeams(),
+  useAllTeams: () => mockUseTeams(),
   useTeam: () => ({ data: undefined }),
 }));
 

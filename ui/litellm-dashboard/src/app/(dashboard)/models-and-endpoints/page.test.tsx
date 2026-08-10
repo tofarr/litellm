@@ -30,7 +30,7 @@ vi.mock("@/components/team/TeamInfo", () => ({
 
 const mockUseAuthorized = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({ default: () => mockUseAuthorized() }));
-vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({ useTeams: () => ({ data: [] }) }));
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({ useMyTeams: () => ({ data: [] }) }));
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
   useUISettings: () => ({ data: { values: {} } }),
 }));

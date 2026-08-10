@@ -37,7 +37,7 @@ vi.mock("../molecules/notifications_manager", () => {
 
 // Mock useTeams hook
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
-  useTeams: vi.fn(() => ({
+  useAllTeams: vi.fn(() => ({
     data: [],
     isLoading: false,
     error: null,

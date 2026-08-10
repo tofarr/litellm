@@ -58,11 +58,11 @@ vi.mock("@/components/common_components/team_multi_select", () => ({
   default: () => <div>Team Multi Select</div>,
 }));
 
-// Mock useTeams hook
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({
-  default: vi.fn(() => ({
-    teams: [],
-    setTeams: vi.fn(),
+// Mock useAllTeams hook
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
+  useAllTeams: vi.fn(() => ({
+    data: [],
+    isLoading: false,
   })),
 }));
 

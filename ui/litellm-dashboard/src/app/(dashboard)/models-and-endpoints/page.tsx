@@ -5,7 +5,7 @@ import { Tabs } from "antd";
 import { RefreshIcon } from "@heroicons/react/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
-import { useTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
+import { useMyTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { useUISettings } from "@/app/(dashboard)/hooks/uiSettings/useUISettings";
 import { all_admin_roles, internalUserRoles } from "@/utils/roles";
 import { canCreateModels } from "@/utils/modelPermissions";
@@ -75,7 +75,7 @@ const renderPanel = (key: string) => {
 
 export default function ModelsAndEndpointsPage() {
   const { accessToken, userRole, userId: userID, premiumUser } = useAuthorized();
-  const { data: teams } = useTeams();
+  const { data: teams } = useMyTeams();
   const { data: uiSettings } = useUISettings();
   const queryClient = useQueryClient();
   const { modelId, teamId, close } = useModelDetailRouting();

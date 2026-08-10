@@ -19,7 +19,7 @@ vi.mock("@/app/(dashboard)/models-and-endpoints/utils/modelDataTransformer", () 
 const mockUseModelsInfo = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/models/useModels", () => ({ useModelsInfo: () => mockUseModelsInfo() }));
 vi.mock("@/app/(dashboard)/hooks/models/useModelCostMap", () => ({ useModelCostMap: () => ({ data: {} }) }));
-vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({ useTeams: () => ({ data: [] }) }));
+vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({ useAllTeams: () => ({ data: [] }) }));
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({ default: () => ({ accessToken: "123" }) }));
 
 describe("HealthStatusPanel", () => {

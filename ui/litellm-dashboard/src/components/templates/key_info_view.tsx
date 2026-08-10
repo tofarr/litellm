@@ -1,7 +1,7 @@
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { useProjects } from "@/app/(dashboard)/hooks/projects/useProjects";
 import { useUISettings } from "@/app/(dashboard)/hooks/uiSettings/useUISettings";
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
+import { useAllTeams } from "@/app/(dashboard)/hooks/teams/useTeams";
 import { formatNumberWithCommas } from "@/utils/dataUtils";
 import { mapEmptyStringToNull } from "@/utils/keyUpdateUtils";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
@@ -69,7 +69,7 @@ export default function KeyInfoView({
   const { accessToken, userId: userID, userRole, premiumUser } = useAuthorized();
   const queryClient = useQueryClient();
   const canEditGuardrails = premiumUser || (userRole != null && rolesWithWriteAccess.includes(userRole));
-  const { teams: teamsData } = useTeams();
+  const { data: teamsData } = useAllTeams();
   const { data: projects } = useProjects();
   const { data: uiSettingsData } = useUISettings();
   const enableProjectsUI = Boolean(uiSettingsData?.values?.enable_projects_ui);

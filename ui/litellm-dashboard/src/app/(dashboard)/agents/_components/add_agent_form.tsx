@@ -17,7 +17,6 @@ import {
 } from "@/components/networking";
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { getModelDisplayName } from "@/components/key_team_helpers/fetch_available_models_team_key";
-import { Team } from "@/components/key_team_helpers/key_list";
 import TeamDropdown from "@/components/common_components/team_dropdown";
 import AgentFormFields from "./agent_form_fields";
 import AgentCardDiscovery, { DiscoveredAgentCardSelection } from "./agent_card_discovery";
@@ -37,10 +36,9 @@ interface AddAgentFormProps {
   onClose: () => void;
   accessToken: string | null;
   onSuccess: () => void;
-  teams?: Team[] | null;
 }
 
-const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessToken, onSuccess, teams }) => {
+const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessToken, onSuccess }) => {
   const { userId, userRole } = useAuthorized();
   const [form] = Form.useForm();
   const [currentStep, setCurrentStep] = useState(0);
